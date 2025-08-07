@@ -3,8 +3,8 @@ import requests
 import time
 
 TOKEN = os.getenv("TOKEN")  # Read from GitHub Actions secrets securely
-BOT_NAME = "Sooraj_kumar_p_s"
-TOTAL_GAMES = 100
+BOT_NAME = "indianguyplayz"
+TOTAL_GAMES = 200
 SLEEP_BETWEEN = 30  # Delay between challenges
 
 if not TOKEN:

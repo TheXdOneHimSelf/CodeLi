@@ -1,32 +1,47 @@
 name: Lichess Mass Challenge
 
 on:
-  workflow_dispatch:  # Allows manual trigger from GitHub Actions
+  workflow_dispatch:
+    inputs:
+      token_choice:
+        description: "Select Bot Token (1, 2, or 3)"
+        required: true
+        default: "1"
+        type: choice
+        options:
+          - "1"
+          - "2"
+          - "3"
 
 jobs:
   run-challenges:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout your repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests
 
-      # 4️⃣ Run the mass challenge script
+      - name: Set TOKEN from selected input
+        run: |
+          case "${{ github.event.inputs.token_choice }}" in
+            1) echo "TOKEN=${{ secrets.TOKEN }}" >> $GITHUB_ENV ;;
+            2) echo "TOKEN=${{ secrets.TOKEN1 }}" >> $GITHUB_ENV ;;
+            3) echo "TOKEN=${{ secrets.TOKEN2 }}" >> $GITHUB_ENV ;;
+            *) echo "Invalid token_choice"; exit 1 ;;
+          esac
+
       - name: Send challenges to Lichess bot
         env:
-          TOKEN: ${{ secrets.TOKEN }}  # Secure API token from repo secrets
+          TOKEN: ${{ env.TOKEN }}
         run: |
           python -u challenger.py

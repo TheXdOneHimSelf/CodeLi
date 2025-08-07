@@ -1,0 +1,44 @@
+name: Join Tournament Bot
+
+on:
+  workflow_dispatch:
+    inputs:
+      token_choice:
+        description: "Select Bot Token (1, 2, or 3)"
+        required: true
+        default: "1"
+        type: choice
+        options:
+          - "1"
+          - "2"
+          - "3"
+
+      tournament_id:
+        description: "Enter Lichess Tournament ID (e.g. abcd1234)"
+        required: true
+        default: "abcd1234"
+
+jobs:
+  join-tournament:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set TOKEN and TOURNAMENT_ID env vars
+        run: |
+          case "${{ github.event.inputs.token_choice }}" in
+            1) echo "TOKEN=${{ secrets.TOKEN }}" >> $GITHUB_ENV ;;
+            2) echo "TOKEN=${{ secrets.TOKEN1 }}" >> $GITHUB_ENV ;;
+            3) echo "TOKEN=${{ secrets.TOKEN2 }}" >> $GITHUB_ENV ;;
+            *) echo "❌ Invalid token_choice!" && exit 1 ;;
+          esac
+          echo "TOURNAMENT_ID=${{ github.event.inputs.tournament_id }}" >> $GITHUB_ENV
+
+      - name: Run tournament joiner script
+        env:
+          TOKEN: ${{ env.TOKEN }}
+          TOURNAMENT_ID: ${{ env.TOURNAMENT_ID }}
+        run: |
+          python join_tournament.py

@@ -6,19 +6,14 @@ import itertools
 TOKEN = os.getenv("TOKEN")  # Read from GitHub Actions secrets securely
 
 BOT_NAMES = [
-    "ToromBot",
     "NimsiluBot",
-    "MaggiChess16",
     "Exogenetic-Bot",
-    "Endogenetic-Bot",
-    "VEER-OMEGA-BOT",
-    "Yuki_1324",
-    "InvinxibleFlxsh",
-    "strain-on-veins"
+    "Endogenetic-Bot"
 ]  
 
 TOTAL_GAMES = 200   # Total number of games overall (not per bot)
-SLEEP_BETWEEN = 60  # Delay between challenges (seconds)
+SLEEP_BETWEEN = 60  # Delay between accepted challenges (seconds)
+WAIT_FOR_ACCEPT = 15 # Seconds to wait if bot might accept
 
 if not TOKEN:
     raise ValueError("TOKEN environment variable not set!")
@@ -37,22 +32,25 @@ def send_challenges():
         "variant": "standard"
     }
 
-    # Cycle through bots endlessly until TOTAL_GAMES is reached
     bot_cycle = itertools.cycle(BOT_NAMES)
+    sent_games = 0
 
-    for i in range(1, TOTAL_GAMES + 1):
-        bot = next(bot_cycle)  # Pick next bot in rotation
+    while sent_games < TOTAL_GAMES:
+        bot = next(bot_cycle)
         url = f"https://lichess.org/api/challenge/{bot}"
 
-        print(f"Sending challenge {i}/{TOTAL_GAMES} to {bot}...")
+        print(f"Sending challenge {sent_games+1}/{TOTAL_GAMES} to {bot}...")
         response = requests.post(url, headers=headers, json=payload)
 
         if response.status_code == 200:
-            print(f"  ✅ Challenge {i} sent to {bot}.")
+            print(f"  ✅ Challenge sent to {bot}, waiting {WAIT_FOR_ACCEPT}s for acceptance...")
+            time.sleep(WAIT_FOR_ACCEPT)
+            # Assume accepted if no immediate failure (API won't update instantly)
+            sent_games += 1
+            time.sleep(SLEEP_BETWEEN)
         else:
-            print(f"  ❌ Challenge {i} failed for {bot}! Status: {response.status_code} | {response.text}")
-
-        time.sleep(SLEEP_BETWEEN)
+            print(f"  ❌ {bot} did not accept / failed! Skipping... Status: {response.status_code} | {response.text}")
+            time.sleep(1)  # tiny pause before next bot
 
 if __name__ == "__main__":
     send_challenges()

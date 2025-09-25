@@ -25,9 +25,9 @@ def send_challenges():
     }
 
     payload = {
-        "clock.limit": 30,
+        "clock.limit": 180,
         "clock.increment": 0,
-        "rated": False,
+        "rated": True,
         "color": "random",
         "variant": "standard"
     }

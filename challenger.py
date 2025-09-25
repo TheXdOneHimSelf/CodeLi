@@ -6,7 +6,9 @@ import itertools
 TOKEN = os.getenv("TOKEN")  # Read from GitHub Actions secrets securely
 
 BOT_NAMES = [
-    "Endogenetic-Bot"
+    "RefuteMyGambit",
+    "duchessAI",
+    "odonata-bot"
 ]  
 
 TOTAL_GAMES = 60        # Total number of games overall (not per bot)

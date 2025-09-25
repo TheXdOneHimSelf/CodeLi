@@ -6,13 +6,12 @@ import itertools
 TOKEN = os.getenv("TOKEN")  # Read from GitHub Actions secrets securely
 
 BOT_NAMES = [
-    "Exogenetic-Bot",
     "Endogenetic-Bot"
 ]  
 
-TOTAL_GAMES = 200   # Total number of games overall (not per bot)
-SLEEP_BETWEEN = 60  # Delay between accepted challenges (seconds)
-WAIT_FOR_ACCEPT = 10 # Seconds to wait if bot might accept
+TOTAL_GAMES = 60        # Total number of games overall (not per bot)
+SLEEP_BETWEEN = 60      # Delay between accepted challenges (seconds)
+WAIT_FOR_ACCEPT = 60    # Seconds to wait if bot might accept
 
 if not TOKEN:
     raise ValueError("TOKEN environment variable not set!")
@@ -24,7 +23,7 @@ def send_challenges():
     }
 
     payload = {
-        "clock.limit": 30,        # 30 seconds
+        "clock.limit": 30,
         "clock.increment": 0,
         "rated": False,
         "color": "random",

@@ -11,7 +11,7 @@ BOT_NAMES = [
     "odonata-bot"
 ]  
 
-TOTAL_GAMES = 60        # Total number of games overall (not per bot)
+TOTAL_GAMES = 300       # Total number of games overall (not per bot)
 SLEEP_BETWEEN = 60      # Delay between accepted challenges (seconds)
 WAIT_FOR_ACCEPT = 60    # Seconds to wait if bot might accept
 
